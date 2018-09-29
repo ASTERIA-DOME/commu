@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, user-scalable=no">
+        <title>MISSION III: Chiron - Agni</title>
+        <style>
+            body{
+                background:#fff;
+                text-align:center;
+            }
+            .img{
+                margin: 0 auto;
+                cursor: pointer; 
+                max-width:100%;
+            }
+
+            audio{
+                margin-bottom:100px;
+            }
+        </style>
+    </head>
+    <body>
+        <audio controls autoplay loop>
+            <source src="./bgm.mp3" type="audio/mpeg">
+        </audio>
+        <br />
+        <img src="https://i.imgur.com/bwG08rk.jpg" class="img" />
+    </body>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    <script>
+        var $img = $(".img");
+        var img = [];
+        var src = [
+            "https://i.imgur.com/bwG08rk.jpg",
+            "http://ivanah.ivyro.net/main/data/file/ground/2009415036_1vfchqyw_35c9609b11b01da85d674aad28380e109add5955.jpg",
+        ];
+        var index = getIndexFromHash();
+        
+        if (index != 0) changePage();
+        // else callNextImg();
+
+        $img.on("click", function(){
+            index++;
+            if(index >= src.length) index = 0;
+            changePage();
+            history.pushState(null, null, "#"+index);
+        });
+
+        $(window).on("popstate", function() {
+            index = getIndexFromHash();
+            console.log(index);
+            changePage();
+        });
+
+        function getIndexFromHash() {
+            var parsed = parseInt(window.location.hash.replace("#",""));
+            return (isNaN(parsed)) ? 0 : parsed;
+        }
+
+        function changePage() {
+            // callNextImg();
+            $img.fadeOut(function(){
+                $img
+                    .on("load", function(){
+                        $img.fadeIn();
+                    })
+                    .attr("src", src[index])
+            });
+            $("html, body").animate({scrollTop: 0}, 300);
+        }
+
+        function callNextImg() {
+            var nextIndex = (index + 1 >= src.length) ? 0 : index + 1;
+            (new Image()).src = src[nextIndex];
+        }
+    </script>
+</html>
